@@ -1,0 +1,38 @@
+// -----------------------------------------------------------------------------
+// FILE 4: The Kubernetes Manifest for the Application
+// Create a file named 'simple-api-deployment.yaml' in your main project directory.
+// -----------------------------------------------------------------------------
+// simple-api-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-api
+  template:
+    metadata:
+      labels:
+        # This label is what Datadog will use to find and instrument this pod
+        app: simple-api
+    spec:
+      containers:
+      - name: api
+        # IMPORTANT: Replace this with your ECR image path
+        image: YOUR_ECR_REGISTRY/simple-api:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-api-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: simple-api
+  ports:
+  - port: 80
+    targetPort: 8080

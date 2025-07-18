@@ -1,0 +1,9 @@
+# Ignore git history
+.git
+
+# Ignore maven build output directory
+target
+
+# Ignore IDE-specific files
+.idea
+*.iml
