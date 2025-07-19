@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------------
-// FILE 4: The Kubernetes Manifest for the Application
-// Create a file named 'simple-api-deployment.yaml' in your main project directory.
-// -----------------------------------------------------------------------------
-// simple-api-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,13 +12,24 @@ spec:
       labels:
         # This label is what Datadog will use to find and instrument this pod
         app: simple-api
+        admission.datadoghq.com/enabled: "true"
     spec:
       containers:
       - name: api
         # IMPORTANT: Replace this with your ECR image path
-        image: YOUR_ECR_REGISTRY/simple-api:latest
+        image: 730006451716.dkr.ecr.ap-south-1.amazonaws.com/simple-api:latest
         ports:
         - containerPort: 8080
+        env:
+          - name: DD_TRACE_AGENT_URL
+            value: 'unix:///var/run/datadog/apm.socket'
+        volumeMounts:
+        - name: apmsocketpath
+          mountPath: /var/run/datadog
+      volumes:
+        - hostPath:
+            path: /var/run/datadog/
+          name: apmsocketpath    
 ---
 apiVersion: v1
 kind: Service
