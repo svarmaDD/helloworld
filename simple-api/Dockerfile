@@ -12,5 +12,6 @@ RUN mvn package -DskipTests
 # Stage 2: Create the final, runnable image
 FROM amazoncorretto:17-alpine
 WORKDIR /app
+ADD https://dtdg.co/latest-java-tracer /app/dd-java-agent.jar
 COPY --from=build /app/target/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
